@@ -107,6 +107,20 @@ object PrimeTools {
     }
   }
 
+  def primeFactor(number: Long, factor: Long = 2L): List[Long] = {
+    number match {
+      case 1 => List.empty
+      case n: Long => {
+        n % factor match {
+          case 0 => List(factor) ++ primeFactor(n / factor)
+          case _ => primeFactor(n, factor + 1)
+        }
+      }
+    }
+  }
+
+  def primeFactorByFactorTuple(number: Long): List[Tuple2[Long, Long]] = primeFactor(number).groupBy(f => f).map(m => (m._1, m._2.length.toLong)).toList
+
   class PrimeGenerator() extends Iterator[Int] {
     var primesList: List[Int] = List.empty
 
