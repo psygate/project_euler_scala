@@ -5,7 +5,11 @@ import scala.annotation.tailrec
 /**
   * Created by psygate on 04.05.2017.
   */
+
+
 object PrimeTools {
+  type Number >: Numeric[_]
+
   def isPrimeRespective(x: Int, primes: List[Int]): Boolean = !primes.exists(p => x % p == 0)
 
   def isPrime(x: Int): Boolean = x >= 2 && !primesTo(x).exists(v => x != v && x % v == 0)
@@ -75,6 +79,29 @@ object PrimeTools {
           case q: Int if q >= Math.sqrt(list.last) + 1 => list
           case _ =>
             sieve(head ++ List(num) ++ tail.filter(n => n % num != 0), index + 1)
+        }
+      }
+    }
+  }
+
+  def sieveL(input: List[Long]): List[Long] = {
+    val list = input.filter(l => l >= 2)
+    assert(list.head == 2)
+    sieveL(list, 0)
+  }
+
+  @tailrec
+  private def sieveL(list: List[Long], index: Int): List[Long] = {
+    list match {
+      case g: List[Long] if g.isEmpty => List.empty
+      case g: List[Long] if g.length == index => g
+      case g: List[Long] => {
+        val (head, tail) = g.splitAt(index)
+        val num = g(index)
+        num match {
+          case q: Long if q >= Math.sqrt(list.last) + 1 => list
+          case _ =>
+            sieveL(head ++ List(num) ++ tail.filter(n => n % num != 0), index + 1)
         }
       }
     }
