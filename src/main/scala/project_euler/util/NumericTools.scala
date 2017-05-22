@@ -26,14 +26,54 @@ object NumericTools {
   //    case _ => 1L
   //  }
 
-  def divisors(number: Long) = List(1) ++ List(number) ++ Stream.range(2, number / 2 + 2).filter(d => number % d == 0).toList
+  def divisors(number: Long) = number match {
+    case g: Long if g < 0 => throw new IllegalArgumentException("Value smaller 0 is not allowed.")
+    case 0 => throw new IllegalArgumentException("Proper divisors of 0 are infinite.")
+    case 1 => List(1L)
+    case _ => properDivisors(number) ++ List(number)
+  }
 
-  def numberOfDivisors(number: Long) = PrimeTools.primeFactorByFactorTuple(number).map(t => t._2 + 1).product
+  def properDivisors(number: Long) = number match {
+    case g: Long if g < 0 => throw new IllegalArgumentException("Value smaller 0 is not allowed.")
+    case 0 => throw new IllegalArgumentException("Proper divisors of 0 are infinite.")
+    case 1 => List(1L)
+    case 2 => List(1L)
+    case _ => List(1L) ++ Stream.range(2, number / 2 + 2).filter(d => number % d == 0).toList
+  }
+
+
+  def numberOfDivisors(number: Long) = number match {
+    case g: Long if g < 0 => throw new IllegalArgumentException("Value smaller 0 is not allowed.")
+    case 0 => throw new IllegalArgumentException("Proper divisors of 0 are infinite.")
+    case 1 => 1L
+    case _ => PrimeTools.primeFactorByFactorTuple(number).map(t => t._2 + 1).product
+  }
 
   def binomial(n: Long, k: Long): Long = k match {
     case 0L => 1L
     case g: Long if g == n => 1L
     case g: Long if n == 0 => 0L
+    case _ => binomial(n - 1, k - 1) + binomial(n - 1, k)
+  }
+
+  def factorial(n: BigInt): BigInt = {
+    n match {
+      case ONE => ONE
+      case _ => n * factorial(n - ONE)
+    }
+  }
+
+  def binomialCoefficient(n: Int, k: Int) =
+    (BigInt(n - k + 1) to n).product /
+      (BigInt(1) to k).product
+
+  private val ZERO = BigInt(0)
+  private val ONE = BigInt(1)
+
+  def binomial(n: BigInt, k: BigInt): BigInt = k match {
+    case ZERO => 1L
+    case g: BigInt if g == n => ONE
+    case g: BigInt if n == ZERO => ZERO
     case _ => binomial(n - 1, k - 1) + binomial(n - 1, k)
   }
 
